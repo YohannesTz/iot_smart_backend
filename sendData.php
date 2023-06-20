@@ -22,11 +22,15 @@ if ($method == 'POST') {
         $pumpstatus = $_POST['pumpstatus'] ? 1 : 0;
         $timestamp = time();
 
-        $stmt = $conn->prepare("INSERT INTO `sensordata`(`id`, `hardwaredId`, `temp`, `humidity`, `pumpstatus`, `timestamp`) VALUES (null, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO `sensordata`(`hardwareId`, `temp`, `humidity`, `pumpstatus`, `timestamp`) VALUES (?, ?, ?, ?, ?)");
         $stmt->bind_param("siiis", $hardwareId, $temp, $humidity, $pumpstatus, $timestamp);
-        $stmt->execute();
+        $res = $stmt->execute();
 
-        echo json_encode(array("success" => true, "message" => "Data was successfully inserted."));
+        if ($stmt->execute()) {
+            echo json_encode(array("success" => true, "message" => "Data was successfully inserted.", "result" => $res));
+        } else {
+            echo json_encode(array("success" => false, "message" => "Error: " . $stmt->error));
+        }
         $stmt->close();
     } else {
         echo json_encode(array("success" => false, "message" => "Something was wrong..."));

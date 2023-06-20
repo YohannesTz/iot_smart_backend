@@ -16,14 +16,14 @@ if ($method == 'POST') {
         && isset($_POST['hardwareId']) && !empty($_POST['hardwareId'])
     ) {
         $email = $_POST['email'];
-        $password = $_POST['password'];
-        $hardwareId = password_hash($_POST('hardwareId'), PASSWORD_DEFAULT);
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $hardwareId = $_POST['hardwareId'];
 
-        $stmt = $conn->prepare("INSERT INTO `user`(`id`, `email`, `password`, `hardwareId`) VALUES (null, ?, ?,?)");
+        $stmt = $conn->prepare("INSERT INTO `user`(`id`, `email`, `password`, `hardwareId`) VALUES (null, ?, ?, ?)");
         $stmt->bind_param("sss", $email, $password, $hardwareId);
         $stmt->execute();
 
-        echo json_encode(array("success" => false, "message" => "Successfully inserted User"));
+        echo json_encode(array("success" => true, "message" => "Successfully inserted User"));
 
         // Close statement
         $stmt->close();
@@ -32,7 +32,7 @@ if ($method == 'POST') {
         echo json_encode(array("success" => false, "message" => "Error: Missing or empty fields"));
     }
 } else {
-    $response = array('message' => 'Server is running and does not accept any operation using this method.');
+    $response = array("success" => false, 'message' => 'Server is running and does not accept any operation using this method.');
     echo json_encode($response);
 }
 ?>

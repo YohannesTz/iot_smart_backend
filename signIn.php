@@ -44,7 +44,7 @@ if ($method == 'POST') {
         $stmt->close();
     }
 } else {
-    $response = array('message' => 'Server is running and does not accept any operation using this method.');
+    $response = array("success" => false, 'message' => 'Server is running and does not accept any operation using this method.');
     echo json_encode($response);
 }
 

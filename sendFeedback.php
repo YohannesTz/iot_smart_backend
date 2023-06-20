@@ -21,16 +21,22 @@ if ($method == 'POST') {
 
         $stmt = $conn->prepare("INSERT INTO `feedback`(`id`, `userId`, `phonenumber`, `feedback`) VALUES (null, ?, ?, ?)");
         $stmt->bind_param("iss", $userId, $phoneNumber, $feedback);
-        $stmt->execute();
 
-        echo json_encode(array("sucess" => false, "message" => "Successfully inserted feedback"));
+        $result = $stmt->execute();
+
+        if ($result) {
+            echo json_encode(array("success" => false, "message" => "successfully inserted data!"));
+        } else {
+            echo json_encode(array("sucess" => false, "message" => "Error: " . $stmt->error, "result" => $result));
+        }
+
         $stmt->close();
     } else {
         // Handle missing or empty fields
         echo json_encode(array("success" => false, "message" => "Error: Missing or empty fields"));
     }
 } else {
-    $response = array('message' => 'Server is running and does not accept any operation using this method.');
+    $response = array("success" => false, 'message' => 'Server is running and does not accept any operation using this method.');
     echo json_encode($response);
 }
 
