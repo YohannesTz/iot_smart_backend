@@ -8,7 +8,7 @@ $conn = require 'connection.php';
 
 
 $method = $_SERVER['REQUEST_METHOD'];
-$data = json_decode(file_get_contents('php://'), true);
+//$data = json_decode(file_get_contents('php://'), true);
 
 if ($method == 'POST') {
     if (isset($_GET['hardwareId']) && !empty($_GET['hardwareId']) && isset($_GET['password']) && !empty($_GET['password'])) {

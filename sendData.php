@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 $conn = require 'connection.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
-$data = json_decode(file_get_contents('php://input'), true);
+//$data = json_decode(file_get_contents('php://input'), true);
 
 if ($method == 'POST') {
     if (
@@ -32,7 +32,7 @@ if ($method == 'POST') {
         echo json_encode(array("success" => false, "message" => "Something was wrong..."));
     }
 } else {
-    $response = array('message' => 'Server is running and does not accept any operation using this method.');
+    $response = array("success" => false, 'message' => 'Server is running and does not accept any operation using this method.');
     echo json_encode($response);
 }
 
