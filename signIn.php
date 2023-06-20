@@ -11,37 +11,43 @@ $method = $_SERVER['REQUEST_METHOD'];
 //$data = json_decode(file_get_contents('php://'), true);
 
 if ($method == 'POST') {
-    if (isset($_GET['hardwareId']) && !empty($_GET['hardwareId']) && isset($_GET['password']) && !empty($_GET['password'])) {
-        $hardwareId = $_GET['hardwareId'];
-        $password = $_GET['password'];
+    if (isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['password']) && !empty($_POST['password'])) {
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-        // Authenticate User
-        $stmt = $conn->prepare("SELECT * FROM User WHERE password = ?");
-        $stmt->bind_param("s", password_hash($password, PASSWORD_DEFAULT)); // Encrypt password
+        //Authenticate user
+        $stmt = $conn->prepare("SELECT * FROM user WHERE email = ?");
+        $stmt->bind_param("s", $email); // Encrypt password
         $stmt->execute();
         $result = $stmt->get_result();
 
-        // Authenticate the user
         $authenticated = false;
         while ($row = $result->fetch_assoc()) {
-            if (password_verify($password, $row['password_hash'])) {
+            if (password_verify($password, $row['password'])) {
                 $authenticated = true;
                 break;
             }
         }
 
+        // Output the data as JSON if authenticated, otherwise output an error message
         if ($authenticated) {
-            $data = array();
-            while ($row = $result->fetch_assoc()) {
-                $data[] = $row;
-            }
-            echo json_encode(array("success" => true, "data" => $data));
-        } else {
-            echo json_encode(array("success" => false, "message" => "Authentication failed."));
-        }
+            $sql = "SELECT * FROM user";
+            $result = $conn->query($sql);
 
-        $result->close();
-        $stmt->close();
+            $data = array();
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $data[] = $row;
+                }
+            }
+
+            echo json_encode(array("success" => true, "data" => $data[0], "isAuthenticated" => true, "password" => $password));
+        } else {
+            //echo json_encode("", "Authentication failed");
+            echo json_encode(array("success" => false, "message" => "Authentication failed.", "data" => null, "isAuthenticated" => false, "password" => null));
+        }
     }
 } else {
     $response = array("success" => false, 'message' => 'Server is running and does not accept any operation using this method.');
