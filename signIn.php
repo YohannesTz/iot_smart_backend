@@ -8,7 +8,6 @@ $conn = require 'connection.php';
 
 
 $method = $_SERVER['REQUEST_METHOD'];
-//$data = json_decode(file_get_contents('php://'), true);
 
 if ($method == 'POST') {
     if (isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['password']) && !empty($_POST['password'])) {

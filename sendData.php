@@ -6,7 +6,6 @@ header('Content-Type: application/json');
 $conn = require 'connection.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
-//$data = json_decode(file_get_contents('php://input'), true);
 
 if ($method == 'POST') {
     if (
