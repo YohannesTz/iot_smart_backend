@@ -4,9 +4,9 @@
 
 //Connecting to database
 $host = "localhost";
-$username = "id18758358_a";
-$password = "N1n}lxe*1+QQ8/\g";
-$dbname = "id18758358_b";
+$username = "";
+$password = "";
+$dbname = "";
 
 // Create a mysqli instance
 $conn = new mysqli($host, $username, $password, $dbname);
